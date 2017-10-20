@@ -1,8 +1,16 @@
 #!/bin/bash
 
 # Set passwordless sudo for vagrant user
+rm -rf /etc/sudoers.d/vagrant
 echo "vagrant ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/vagrant
 chmod 0440 /etc/sudoers.d/vagrant
+
+# Set insecure keypair for SSH so that vagrant can take SSH connection to this box
+mkdir -p ~/.ssh
+chmod 0700 ~/.ssh
+rm -rf ~/.ssh/authorized_keys
+wget https://raw.githubusercontent.com/hashicorp/vagrant/master/keys/vagrant.pub -O ~/.ssh/authorized_keys
+chmod 0600 ~/.ssh/authorized_keys
 
 # Install dependencies for building virtualbox guest additions
 apt-get update -y
