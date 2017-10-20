@@ -26,3 +26,6 @@ sudo ./vbox_additions/VBoxLinuxAdditions.run
 rm -rf VBoxGuestAdditions_5.2.0.iso
 umount ./vbox_additions
 rm -rf vbox_additions
+
+# Restart the machine in order to use virtualbox kernel modules
+reboot
