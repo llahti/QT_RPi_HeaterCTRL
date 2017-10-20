@@ -1,8 +1,13 @@
 #!/bin/bash
+
+# Set passwordless sudo for vagrant user
+echo "vagrant ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/vagrant
+chmod 0440 /etc/sudoers.d/vagrant
+
 # Install dependencies for building virtualbox guest additions
-apt-get update
-apt-get upgrade
-apt-get install build-essential module-assistant
+apt-get update -y
+apt-get upgrade -y
+apt-get install -y build-essential module-assistant
 m-a prepare
 
 # Install virtualbox guest additions
