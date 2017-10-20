@@ -15,7 +15,7 @@ chmod 0600 ~/.ssh/authorized_keys
 # Install dependencies for building virtualbox guest additions
 apt-get update -y
 apt-get upgrade -y
-apt-get install -y build-essential module-assistant
+apt-get install -y linux-headers-$(uname -r) build-essential module-assistant dkms
 m-a prepare
 
 # Install virtualbox guest additions
