@@ -33,6 +33,16 @@ rm -rf vbox_additions
 apt-get install openssh-server
 
 # Uninstall junk to make box smaller
+apt-get remove -y libreoffice-*
+apt-get remove -y ubuntu-web-launchers
+apt-get remove -y xserver-xorg-video-amdgpu xserver-xorg-video-ati xserver-xorg-video-intel xserver-xorg-video-nouveau xserver-xorg-video-qxl xserver-xorg-video-radeon
+apt-get remove -y thunderbird*
+apt-get remove -y shotwell*
+apt-get remove -y rhythmbox*
+apt-get remove -y printer-driver*
+apt-get remove -y memtest86
+apt-get remove -y gnome-sudoku gnome-mines gnome-mahjong gnome-calendar
+apt-get remove -y cups
 
 # Restart the machine in order to use virtualbox kernel modules
 reboot
