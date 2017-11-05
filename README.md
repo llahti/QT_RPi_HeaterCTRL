@@ -14,3 +14,5 @@ sudo sh ./debian_stretch_desktop.sh
 
 
 For convinience also set automatic login for vagrant user and remove screen locks
+
+

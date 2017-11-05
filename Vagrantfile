@@ -12,11 +12,7 @@ Vagrant.configure("2") do |config|
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://vagrantcloud.com/search.
-  #config.vm.box = "ubuntu/xenial64"
-  config.vm.box = "debian/stretch64"
-  
-  #config.ssh.username = 'ubuntu'
-  #config.ssh.password = 'ubuntu'
+  config.vm.box = "llahti/ubuntu1710_desktop_100gb_fi"
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
@@ -68,36 +64,49 @@ Vagrant.configure("2") do |config|
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
   config.vm.provision "shell", inline: <<-SHELL
-    apt-get update
-    # Set ubuntu password to known password
-    apt-get install -y expect
-    chmod +x /vagrant/change_ubuntu_password
-    /vagrant/change_ubuntu_password
-    # Install desktop environment for ubuntu based machine
-    #apt-get install -y ubuntu-desktop
-    # Install desktop environment for debian based machine
-    apt-get install -y task-desktop
-    # Virtualbox packages for guest enables several useful features
-    apt-get install -y virtualbox-guest-x11
-    apt-get install -y virtualbox-guest-dkms
+    # Cleanup
+    rm -rf ~/src
+    rm -rf ~/opt
+    
+    # Update packages
+    sudo apt-get update -y
+    sudo apt-get upgrade -y
+    
+    # Install useful stuff
+    sudo apt-get install -y git
+    
     # change to Downloads folder to keep downloaded files in one place
-    cd Downloads
+    cd ~/Downloads
     # QT Creator
     ### NOTE! Needs manual installation
-    wget http://download.qt.io/official_releases/qt/5.9/5.9.2/qt-opensource-linux-x64-5.9.2.run
+    wget -q http://download.qt.io/official_releases/qt/5.9/5.9.2/qt-opensource-linux-x64-5.9.2.run
     chmod +x qt-opensource-linux-x64-5.9.2.run
-    sh ./qt-opensource-linux-x64-5.9.2.run
+    #sh ./qt-opensource-linux-x64-5.9.2.run
     
+    #
+    # CROSS COMPILER
+    #
     # Cross compiling toolchain for raspberry pi
-    wget http://crosstool-ng.org/download/crosstool-ng/crosstool-ng-1.23.0.tar.bz2
-    bunzip2 crosstool-ng-1.23.0.tar.bz2
-    tar xf crosstool-ng-1.23.0.tar.bz2
-    apt-get install -y gperf bison flex texinfo help2man ncurses-dev
-    cd crosstool-ng-1.23.0
-    ./configure --prefix=/opt/crosstool-ng-1.23.0
+    # Install build dependencies
+    sudo apt-get install -y autoconf gcc gperf bison flex gawk texinfo help2man make libncurses5-dev python-dev 
+    # Create path to keep source files
+    mkdir -p ~/src
+    cd ~/src
+    # Clone latest version
+    git clone https://github.com/crosstool-ng/crosstool-ng
+    cd crosstool-ng
+    # We are latest version.. 1.23.0 has bug with GCC7 which prevents compiling
+    # git checkout crosstool-ng-1.23.0
+    ./bootstrap
+    ./configure --prefix=/home/vagrant/opt/crosstool-ng-latest
     make && make install
-    echo "\"PATH=\$PATH:\$HOME/opt/crosstool-ng-1.23.0/bin\"" >> ~/.profile
-    mkdir ~/rpi-crosstool
+    ln -s /home/vagrant/opt/crosstool-ng-latest /home/vagrant/opt/crosstool-ng
+    cp ct-ng.comp /etc/bash_completion.d
+    echo "" >> ~/.profile
+    echo "# crosstool-ng path" >> ~/.profile
+    echo "PATH=\$PATH:\$HOME/opt/crosstool-ng/bin" >> ~/.profile
+    rm -rf ~/opt/rpi-crosstool
+    mkdir -p ~/opt/rpi-crosstool
     cd ~/rpi-crosstool
     
   SHELL

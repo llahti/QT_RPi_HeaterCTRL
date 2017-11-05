@@ -1,4 +1,5 @@
 #!/bin/bash
+# https://raw.githubusercontent.com/llahti/QT_RPi_HeaterCTRL/master/vagrant_box_initialization.sh
 
 # Set passwordless sudo for vagrant user
 rm -rf /etc/sudoers.d/vagrant
@@ -30,7 +31,7 @@ umount ./vbox_additions
 rm -rf vbox_additions
 
 # Install needed software
-apt-get install openssh-server
+apt-get install -y openssh-server
 
 # Uninstall junk to make box smaller
 apt-get remove -y libreoffice-*
@@ -40,9 +41,9 @@ apt-get remove -y thunderbird*
 apt-get remove -y shotwell*
 apt-get remove -y rhythmbox*
 apt-get remove -y printer-driver*
-apt-get remove -y memtest86
-apt-get remove -y gnome-sudoku gnome-mines gnome-mahjong gnome-calendar
-apt-get remove -y cups
+apt-get remove -y memtest86+
+apt-get remove -y gnome-sudoku gnome-mines gnome-mahjongg gnome-calendar
+apt-get remove -y cups*
 
 # Restart the machine in order to use virtualbox kernel modules
 reboot
