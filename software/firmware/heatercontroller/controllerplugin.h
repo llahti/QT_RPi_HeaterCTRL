@@ -14,7 +14,7 @@ class ControllerPlugin : public QThread
 public:
   ControllerPlugin();
   ControllerPlugin(HeaterData* pHeaterdata);
-  void run();
+  virtual void run();
 
 
 

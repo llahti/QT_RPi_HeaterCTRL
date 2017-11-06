@@ -5,7 +5,16 @@ HeaterController::HeaterController()
 {
 }
 
-void HeaterController::StartController()
+int HeaterController::StartController()
 {
+  // Initialize HAL layer
+  this->hal = new HAL("hal_dummy");
+  if (this->hal->init()) {
+    return 1;
+  }
+  // TODO: Start controller thread
+  // TODO: Start measurement thread
+  // TODO: Connect measurement signals to controller
 
+  return 0;
 }

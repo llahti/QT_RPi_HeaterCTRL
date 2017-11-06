@@ -5,6 +5,8 @@
 #include <QThread>
 #include "controllerplugin.h"
 
+// TODO: Begin to implement controller
+
 /**
  * @brief The ControllerONOFF class
  * Simple on/off controller

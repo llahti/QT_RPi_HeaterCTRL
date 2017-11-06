@@ -1,5 +1,6 @@
 #include "hal_dummy.h"
 #include "hal_interface.h"
+//#include <iostream>
 
 hal_dummy::hal_dummy()
 {
@@ -8,6 +9,8 @@ hal_dummy::hal_dummy()
 
 int hal_dummy::measureBoilerTemp(double& result)
 {
+
+  //std::cout << "hal_dummy::measureBoilerTemp()" << std::endl;
   result = 80.5;
   return 0;
 }

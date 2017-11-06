@@ -1,7 +1,7 @@
 #include "hal.h"
 #include "hal_interface.h"
 #include "hal_dummy.h"
-#include <iostream>
+//#include <iostream>
 
 
 HAL::HAL()
@@ -57,7 +57,9 @@ QString HAL::getHWType()
 
 int HAL::measureBoilerTemp(double& result)
 {
+  //std::cout << "measureBoilerTemp()" << std::endl;
   if (HAL_instance) {
+    //std::cout << "measureBoilerTemp() ... In the IF structure." << std::endl;
     int ret = this->HAL_instance->measureBoilerTemp(result);
     return ret;
     }

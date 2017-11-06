@@ -25,14 +25,16 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         heatercontroller.cpp \
     controllerplugin.cpp \
-    controlleronoff.cpp
+    controlleronoff.cpp \
+    measure.cpp
 
 HEADERS += \
         heatercontroller.h \
         heatercontroller_global.h \ 
     controllerplugin.h \
     ../ \
-    controlleronoff.h
+    controlleronoff.h \
+    measure.h
 
 unix {
     target.path = /usr/lib
@@ -51,3 +53,10 @@ else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../heat
 else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../heaterdata/release/HeaterData.lib
 else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../heaterdata/debug/HeaterData.lib
 else:unix: PRE_TARGETDEPS += $$OUT_PWD/../heaterdata/libHeaterData.a
+
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../HAL/release/ -lHAL
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../HAL/debug/ -lHAL
+else:unix: LIBS += -L$$OUT_PWD/../HAL/ -lHAL
+
+INCLUDEPATH += $$PWD/../HAL
+DEPENDPATH += $$PWD/../HAL

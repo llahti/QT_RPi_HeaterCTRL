@@ -34,9 +34,17 @@ DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 
 
+
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../../heatercontroller/release/ -lheatercontroller
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../../heatercontroller/debug/ -lheatercontroller
 else:unix: LIBS += -L$$OUT_PWD/../../heatercontroller/ -lheatercontroller
 
 INCLUDEPATH += $$PWD/../../heatercontroller
 DEPENDPATH += $$PWD/../../heatercontroller
+
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../../HAL/release/ -lHAL
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../../HAL/debug/ -lHAL
+else:unix: LIBS += -L$$OUT_PWD/../../HAL/ -lHAL
+
+INCLUDEPATH += $$PWD/../../HAL
+DEPENDPATH += $$PWD/../../HAL

@@ -3,16 +3,19 @@
 
 #include "heatercontroller_global.h"
 #include <QThread>
+#include "hal.h"
 
 class HEATERCONTROLLERSHARED_EXPORT HeaterController
 {
 
 public:
   HeaterController();
-  void StartController();
+  int StartController();
+  QThread* Controller = nullptr;
+  QThread* Measurement = nullptr;
 
 private:
-  static QThread* ControllerThread;
+  HAL* hal = nullptr;
 };
 
 #endif // HEATERCONTROLLER_H
