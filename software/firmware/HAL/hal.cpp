@@ -4,14 +4,10 @@
 //#include <iostream>
 
 
-HAL::HAL()
+HAL::HAL(QObject *parent)
 {
+  this->setParent(parent);
   this->setHWType("");
-}
-
-HAL::HAL(QString hwtype)
-{
-  this->setHWType(hwtype);
 }
 
 /**
@@ -55,28 +51,7 @@ QString HAL::getHWType()
   return hwtype;
 }
 
-int HAL::measureBoilerTemp(double& result)
-{
-  //std::cout << "measureBoilerTemp()" << std::endl;
-  if (HAL_instance) {
-    //std::cout << "measureBoilerTemp() ... In the IF structure." << std::endl;
-    int ret = this->HAL_instance->measureBoilerTemp(result);
-    return ret;
-    }
-  else {
-    return 5;
-    }
-}
 
-int HAL::measureExtGasTemp(double& result)
-{
-  if (HAL_instance) {
-    return this->HAL_instance->measureExtGasTemp(result);
-    }
-  else {
-      return 5;
-    }
-}
 
 int HAL::setHWType(QString hwtype)
 {
@@ -90,12 +65,44 @@ int HAL::setHWType(QString hwtype)
   }
 }
 
-int HAL::setExtFanSpeed(const double speed)
+void HAL::updateValues()
 {
   if (HAL_instance) {
-      return this->HAL_instance->setExtFanSpeed(speed);
-    }
-  else {
-      return 5;
-    }
+    // Variables for data
+    double boilerTemp;
+    double extGasTemp;
+    bool circulationPump;
+    double ExtFan;
+
+    // Measure
+    HAL_interface* h = HAL_instance;  // h for short
+    h->measureBoilerTemp(boilerTemp);
+    h->measureExtGasTemp(extGasTemp);
+    h->getCirculationPump(circulationPump);
+    h->getExtFanSpeed(ExtFan);
+
+    // Emit signals
+    emit measuredBoilerTemp(boilerTemp);
+    emit measuredExtGasTemp(extGasTemp);
+    emit changedCirculationPumpState(circulationPump);
+    emit changedExtFanSpeed(ExtFan);
+  }
+}
+
+
+void HAL::setCirculationPump(bool state)
+{
+  if (HAL_instance){
+    HAL_instance->setCirculationPump(state);
+    emit changedCirculationPumpState(state);
+  }
+}
+
+
+void HAL::setExtFanSpeed(double value)
+{
+  if (HAL_instance) {
+    HAL_instance->setExtFanSpeed(value);
+    emit changedExtFanSpeed(value);
+  }
 }

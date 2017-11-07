@@ -12,7 +12,6 @@ public:
   HeaterController();
   int StartController();
   QThread* Controller = nullptr;
-  QThread* Measurement = nullptr;
 
 private:
   HAL* hal = nullptr;

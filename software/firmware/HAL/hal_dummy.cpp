@@ -2,28 +2,37 @@
 #include "hal_interface.h"
 //#include <iostream>
 
-hal_dummy::hal_dummy()
-{
-  extFanSpeed = 0.0;
-}
+//hal_dummy::hal_dummy()
+//{
+//}
 
 int hal_dummy::measureBoilerTemp(double& result)
 {
-
-  //std::cout << "hal_dummy::measureBoilerTemp()" << std::endl;
-  result = 80.5;
+  result = boilerTemp;
   return 0;
 }
 
 int hal_dummy::measureExtGasTemp(double& result)
 {
-  result = 199.6;
+  result = extGasTemp;
+  return 0;
+}
+
+int hal_dummy::getCirculationPump(bool &state)
+{
+  state = circulationPump;
   return 0;
 }
 
 int hal_dummy::getExtFanSpeed(double& result)
 {
   result = extFanSpeed;
+  return 0;
+}
+
+int hal_dummy::setCirculationPump(bool state)
+{
+  circulationPump = state;
   return 0;
 }
 

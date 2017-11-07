@@ -8,8 +8,7 @@ QT       -= gui
 
 TARGET = HAL
 TEMPLATE = lib
-
-DEFINES += HAL_LIBRARY
+CONFIG += staticlib
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which has been marked as deprecated (the exact warnings
@@ -24,12 +23,10 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         hal.cpp \
-    hal_dummy.cpp \
-    hal_interface.cpp
+    hal_dummy.cpp
 
 HEADERS += \
         hal.h \
-        hal_global.h \ 
     hal_dummy.h \
     hal_interface.h
 

@@ -8,7 +8,8 @@ HeaterController::HeaterController()
 int HeaterController::StartController()
 {
   // Initialize HAL layer
-  this->hal = new HAL("hal_dummy");
+  this->hal = new HAL(0);
+  this->hal->setHWType("hal_dummy");
   if (this->hal->init()) {
     return 1;
   }
