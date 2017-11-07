@@ -6,21 +6,26 @@
 #include <string>
 #include <QMutex>
 #include <QThread>
+#include <QTimer>
 
 
-class HAL : public QThread
+
+
+class HAL : public QObject
 {
 Q_OBJECT
 
 public:
   //HAL(QString hwtype);
   HAL(QObject *parent = Q_NULLPTR);
-  int init();
+  ~HAL();
   QString getHWType();
+  int init();
+  HAL_interface* HALinstance() { return this->HAL_instance; }
   int setHWType(QString hwtype);
-  HAL_interface* HALinstance() { return this->HAL_instance;}
+  int startTimer(const double period=1000);
+  void stopTimer();
 
-  // TODO: enum of error codes
 
   enum DataValues {
     BoilerTemp,
@@ -36,15 +41,27 @@ signals:
   void changedExtFanSpeed(const double value);
 
 public slots:
-  void updateValues();
   void setCirculationPump(const bool state);
   void setExtFanSpeed(const double value);
+  void updateValues();
 
 private:
   // Store pointer to device specific HAL
   HAL_interface* HAL_instance = nullptr;
   // Keep information of hardware type
   QString hwType;
+  // Timer for updating values
+  QTimer* valueUpdater = nullptr;
+};
+
+enum HALErrors {
+  NoError = 0,
+  AlreadyInitialized,
+  HWTypeNotSet,
+  HWTypeNotRecognized,
+  UnknownError,
+  HALNotInitialized,
+  TimerAlreadyRunning
 };
 
 #endif // HAL_H

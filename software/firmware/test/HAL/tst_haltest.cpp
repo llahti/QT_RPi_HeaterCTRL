@@ -18,6 +18,7 @@ private Q_SLOTS:
   void init_twice();
   void getsetHWType();
   void getHWType_notset();
+  //void timer();  // See comments in method definition
 
 
   // Signal tests
@@ -41,6 +42,9 @@ void HALTest::constructor_empty()
 {
   HAL hal(this);
   QVERIFY2(true, "Failure");
+  HAL phal = new HAL(this);
+  QVERIFY2(phal != 0, "Can't create a new HAL instance");
+  delete phal;
 }
 
 
@@ -105,6 +109,44 @@ void HALTest::getHWType_notset()
   QVERIFY2(hwtype_get.isEmpty(), "hwtype is not empty (Should be)");
   QVERIFY2(!hwtype_get.isNull(), "hwtype is NULL. (Should not be)");
 }
+
+/*
+ * Timer test is commented out for now because it need to be run in the evenloop
+void HALTest::timer()
+{
+  HAL hal(this);
+  hal.setHWType("hal_dummy");
+  int ret;
+
+  // We are using QSignalSpy to capture emitted signals
+  QSignalSpy spy(&hal, SIGNAL(measuredBoilerTemp(double)));
+  ret = hal.init();
+  QVERIFY2(ret == 0, "Init didn't return 0");
+
+  // We are using QSignalSpy to capture emitted signals
+  QSignalSpy spy1(&hal, SIGNAL(changedExtFanSpeed(double)));
+  QSignalSpy spy2(&hal, SIGNAL(measuredExtGasTemp(double)));
+  QSignalSpy spy3(&hal, SIGNAL(changedCirculationPumpState(bool)));
+  QSignalSpy spy4(&hal, SIGNAL(changedExtFanSpeed(double)));
+  ret = hal.init();
+  hal.start();
+  QVERIFY2(ret == 0, "Init didn't return 0");
+
+  // Start timer and and keep it running 5 cycles
+  double period = 0.5;
+  hal.startTimer(period);
+  QThread::sleep(5*period+period/2.0);  // Half period tolerance
+  hal.stopTimer();
+
+  // Emit update signals
+  hal.updateValues();
+  // Check that we got all signals
+  QVERIFY2(spy1.count() == 5, "spy1: Didn't receive 5 signals");
+  QVERIFY2(spy2.count() == 5, "spy2: Didn't receive 5 signals");
+  QVERIFY2(spy3.count() == 5, "spy3: Didn't receive 5 signals");
+  QVERIFY2(spy4.count() == 5, "spy4: Didn't receive 5 signals");
+}
+*/
 
 void HALTest::signal_measuredBoilerTemp()
 {

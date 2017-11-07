@@ -1,8 +1,8 @@
 TEMPLATE = subdirs
 
 SUBDIRS += \
-    gui \
-    heaterdata \
-    test \
+    heaterconfig \
+    HAL \
     heatercontroller \
-    HAL
+    gui \
+    test

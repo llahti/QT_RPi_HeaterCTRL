@@ -1,8 +1,8 @@
 #include "controllerplugin.h"
 
-ControllerPlugin::ControllerPlugin()
+ControllerPlugin::ControllerPlugin(QObject* parent)
 {
-
+  this->setParent(parent);
 }
 
 void ControllerPlugin::run()
@@ -10,10 +10,5 @@ void ControllerPlugin::run()
 
 }
 
-
-ControllerPlugin::ControllerPlugin(HeaterData* pHeaterdata)
-{
-  this->heaterdata = pHeaterdata;
-}
 
 

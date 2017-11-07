@@ -10,6 +10,18 @@ HAL::HAL(QObject *parent)
   this->setHWType("");
 }
 
+HAL::~HAL()
+{
+  if (this->HAL_instance) {
+    delete HAL_instance;
+  }
+
+  if (valueUpdater) {
+      valueUpdater->stop();
+      delete valueUpdater;
+  }
+}
+
 /**
  * @brief HAL::init
  * @return 0 when successful
@@ -23,26 +35,26 @@ int HAL::init()
 {
   // When hal instance is already initialized we don't want to do it again
   if (this->HAL_instance) {
-      return 1;
+      return HALErrors::AlreadyInitialized;
     }
   // Test for empty hwtype
   if (this->hwType.isEmpty()) {
-      return 2;
+      return HALErrors::HWTypeNotSet;
     }
 
   // Select class according to give hwtype
   if (QString::compare(this->hwType,
                        QString("hal_dummy"), Qt::CaseInsensitive) == 0) {
       this->HAL_instance = new hal_dummy();
-      return 0;
+      return HALErrors::NoError;
     }
   else {
     // We end up here if hwtype is incorrect
-    return 3;
+    return HALErrors::HWTypeNotRecognized;
   }
 
   // Finally if non of the cases match we return unknown error
-  return 4;
+  return HALErrors::UnknownError;
 }
 
 QString HAL::getHWType()
@@ -64,6 +76,25 @@ int HAL::setHWType(QString hwtype)
     return 0;
   }
 }
+
+
+void HAL::setCirculationPump(bool state)
+{
+  if (HAL_instance){
+    HAL_instance->setCirculationPump(state);
+    emit changedCirculationPumpState(state);
+  }
+}
+
+
+void HAL::setExtFanSpeed(double value)
+{
+  if (HAL_instance) {
+    HAL_instance->setExtFanSpeed(value);
+    emit changedExtFanSpeed(value);
+  }
+}
+
 
 void HAL::updateValues()
 {
@@ -89,20 +120,22 @@ void HAL::updateValues()
   }
 }
 
-
-void HAL::setCirculationPump(bool state)
+int HAL::startTimer(const double period)
 {
-  if (HAL_instance){
-    HAL_instance->setCirculationPump(state);
-    emit changedCirculationPumpState(state);
-  }
+  if (valueUpdater) {
+      return HALErrors::TimerAlreadyRunning;
+    }
+  valueUpdater = new QTimer(this);
+  connect(valueUpdater, SIGNAL(timeout()), this, SLOT(updateValues()));
+  this->startTimer(period*1000);
+  return HALErrors::NoError;
 }
 
-
-void HAL::setExtFanSpeed(double value)
+void HAL::stopTimer()
 {
-  if (HAL_instance) {
-    HAL_instance->setExtFanSpeed(value);
-    emit changedExtFanSpeed(value);
+  if (valueUpdater) {
+      valueUpdater->stop();
+      delete valueUpdater;
+      valueUpdater = nullptr;
   }
 }

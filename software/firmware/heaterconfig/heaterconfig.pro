@@ -1,15 +1,14 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2017-11-04T17:18:16
+# Project created by QtCreator 2017-11-02T13:38:03
 #
 #-------------------------------------------------
 
 QT       -= gui
 
-TARGET = HAL
+TARGET = HeaterConfig
 TEMPLATE = lib
 CONFIG += staticlib
-
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which has been marked as deprecated (the exact warnings
@@ -23,14 +22,10 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-        hal.cpp \
-    hal_dummy.cpp
+    heaterconfig.cpp
 
 HEADERS += \
-        hal.h \
-    hal_dummy.h \
-    hal_interface.h
-
+    heaterconfig.h
 unix {
     target.path = /usr/lib
     INSTALLS += target

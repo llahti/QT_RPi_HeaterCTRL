@@ -1,15 +1,16 @@
 #ifndef HEATERCONTROLLER_H
 #define HEATERCONTROLLER_H
 
-#include "heatercontroller_global.h"
 #include <QThread>
 #include "hal.h"
 
-class HEATERCONTROLLERSHARED_EXPORT HeaterController
+class HeaterController : QObject
 {
+Q_OBJECT
 
 public:
-  HeaterController();
+  HeaterController(QObject* parent = Q_NULLPTR);
+  ~HeaterController();
   int StartController();
   QThread* Controller = nullptr;
 

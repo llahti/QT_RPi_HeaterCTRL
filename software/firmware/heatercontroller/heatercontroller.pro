@@ -8,8 +8,8 @@ QT       -= gui
 
 TARGET = heatercontroller
 TEMPLATE = lib
+CONFIG += staticlib
 
-DEFINES += HEATERCONTROLLER_LIBRARY
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which has been marked as deprecated (the exact warnings
@@ -29,9 +29,7 @@ SOURCES += \
 
 HEADERS += \
         heatercontroller.h \
-        heatercontroller_global.h \ 
     controllerplugin.h \
-    ../ \
     controlleronoff.h
 
 unix {
@@ -39,18 +37,22 @@ unix {
     INSTALLS += target
 }
 
-win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../heaterdata/release/ -lHeaterData
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../heaterdata/debug/ -lHeaterData
-else:unix: LIBS += -L$$OUT_PWD/../heaterdata/ -lHeaterData
 
-INCLUDEPATH += $$PWD/../heaterdata
-DEPENDPATH += $$PWD/../heaterdata
 
-win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../heaterdata/release/libHeaterData.a
-else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../heaterdata/debug/libHeaterData.a
-else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../heaterdata/release/HeaterData.lib
-else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../heaterdata/debug/HeaterData.lib
-else:unix: PRE_TARGETDEPS += $$OUT_PWD/../heaterdata/libHeaterData.a
+
+
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../heaterconfig/release/ -lHeaterConfig
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../heaterconfig/debug/ -lHeaterConfig
+else:unix: LIBS += -L$$OUT_PWD/../heaterconfig/ -lHeaterConfig
+
+INCLUDEPATH += $$PWD/../heaterconfig
+DEPENDPATH += $$PWD/../heaterconfig
+
+win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../heaterconfig/release/libHeaterConfig.a
+else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../heaterconfig/debug/libHeaterConfig.a
+else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../heaterconfig/release/HeaterConfig.lib
+else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../heaterconfig/debug/HeaterConfig.lib
+else:unix: PRE_TARGETDEPS += $$OUT_PWD/../heaterconfig/libHeaterConfig.a
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../HAL/release/ -lHAL
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../HAL/debug/ -lHAL
@@ -58,3 +60,9 @@ else:unix: LIBS += -L$$OUT_PWD/../HAL/ -lHAL
 
 INCLUDEPATH += $$PWD/../HAL
 DEPENDPATH += $$PWD/../HAL
+
+win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../HAL/release/libHAL.a
+else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../HAL/debug/libHAL.a
+else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../HAL/release/HAL.lib
+else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../HAL/debug/HAL.lib
+else:unix: PRE_TARGETDEPS += $$OUT_PWD/../HAL/libHAL.a

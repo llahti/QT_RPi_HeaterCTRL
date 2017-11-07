@@ -1,7 +1,7 @@
 #include <QString>
 #include <QtTest>
 #include <QSettings>
-#include "../../heaterdata/heaterconfig.h"
+#include "heaterconfig.h"
 
 class Heaterdata_testTest : public QObject
 {
@@ -24,7 +24,7 @@ void Heaterdata_testTest::heaterconfig()
 {
   QCOMPARE(COMPANYNAME, "LauriLahti");
   QCOMPARE(APPNAME, "HeaterController");
-  HeaterConfig cfg = HeaterConfig();
+  HeaterConfig cfg(this);
 }
 
 void Heaterdata_testTest::resetFactoryDefaults()
@@ -33,7 +33,7 @@ void Heaterdata_testTest::resetFactoryDefaults()
   QSettings settings(COMPANYNAME, APPNAME);
   settings.clear();
 
-  HeaterConfig cfg = HeaterConfig();
+  HeaterConfig cfg(this);
   cfg.resetFactoryDefaults();
 
   // Verify that all keys are set
@@ -55,7 +55,7 @@ void Heaterdata_testTest::resetFactoryDefaults()
 
 void Heaterdata_testTest::getSettings()
 {
-  HeaterConfig cfg = HeaterConfig();
+  HeaterConfig cfg(this);
   QSettings* settings = cfg.getSettings();
   settings = cfg.getSettings();
   QString orgname(settings->organizationName());

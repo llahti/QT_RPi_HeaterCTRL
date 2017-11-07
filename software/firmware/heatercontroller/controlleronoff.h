@@ -1,7 +1,6 @@
 #ifndef CONTROLLERONOFF_H
 #define CONTROLLERONOFF_H
 
-#include "../heaterdata/heaterdata.h"
 #include <QThread>
 #include "controllerplugin.h"
 
@@ -13,9 +12,10 @@
  */
 class ControllerONOFF : public ControllerPlugin
 {
+  Q_OBJECT
+
 public:
-  ControllerONOFF();
-  ControllerONOFF(HeaterData* pHeaterdata) : ControllerPlugin(pHeaterdata) {}
+  ControllerONOFF(QObject* parent = Q_NULLPTR);
   void run() override;
 
 private:

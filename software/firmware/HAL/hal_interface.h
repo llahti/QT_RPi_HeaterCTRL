@@ -1,6 +1,7 @@
 #ifndef HAL_INTERFACE_H
 #define HAL_INTERFACE_H
 
+// TODO: Add destructor to interface and to real hal classes
 
 class HAL_interface
 {

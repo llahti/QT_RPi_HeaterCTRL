@@ -1,7 +1,6 @@
 #ifndef CONTROLLERPLUGIN_H
 #define CONTROLLERPLUGIN_H
 
-#include "../heaterdata/heaterdata.h"
 #include <QThread>
 
 /**
@@ -11,15 +10,14 @@
 class ControllerPlugin : public QThread
 {
   Q_OBJECT
+
 public:
-  ControllerPlugin();
-  ControllerPlugin(HeaterData* pHeaterdata);
+  ControllerPlugin(QObject* parent = Q_NULLPTR);
   virtual void run();
 
 
 
 protected:
-  HeaterData* heaterdata;
   bool stopThread; // Flag to stop thread
 };
 
