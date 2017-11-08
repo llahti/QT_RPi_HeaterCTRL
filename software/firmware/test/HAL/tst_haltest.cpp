@@ -18,6 +18,7 @@ private Q_SLOTS:
   void init_twice();
   void getsetHWType();
   void getHWType_notset();
+  void start_stopUpdates();
 
   // Signal tests
   void signal_measuredBoilerTemp();
@@ -106,6 +107,43 @@ void HALTest::getHWType_notset()
   QVERIFY2(ret == 2, "Init didn't return 2");
   QVERIFY2(hwtype_get.isEmpty(), "hwtype is not empty (Should be)");
   QVERIFY2(!hwtype_get.isNull(), "hwtype is NULL. (Should not be)");
+}
+
+void HALTest::start_stopUpdates()
+{
+    // Initialize
+    HAL *pHAL = new HAL(this);
+    pHAL->setHWType("hal_dummy");
+    int ret = pHAL->init();
+    QVERIFY2(ret == 0, "Init didn't return 0");
+
+    // We are using QSignalSpy to capture emitted signals
+    QSignalSpy spy1(pHAL, SIGNAL(changedExtFanSpeed(double)));
+    QSignalSpy spy2(pHAL, SIGNAL(measuredExtGasTemp(double)));
+    QSignalSpy spy3(pHAL, SIGNAL(changedCirculationPumpState(bool)));
+    QSignalSpy spy4(pHAL, SIGNAL(changedExtFanSpeed(double)));
+
+    // Start timer and and keep it running N cycles
+    int ncycles = 3;
+    double period = 0.2;
+    ret = pHAL->startUpdates(period);
+    QVERIFY2(ret == 0, "Failed to start timer.");
+
+    // Sleep for 5 periods - small tolerance
+    QThread::msleep((ncycles * period * 1000) - (0.2 * period * 1000));
+
+    // Stopping updates
+    pHAL->stopUpdates();
+
+    // Check that we got all signals
+    QVERIFY2(spy1.count() == ncycles, "spy1: Didn't receive 5 signals");
+    QVERIFY2(spy2.count() == ncycles, "spy2: Didn't receive 5 signals");
+    QVERIFY2(spy3.count() == ncycles, "spy3: Didn't receive 5 signals");
+    QVERIFY2(spy4.count() == ncycles, "spy4: Didn't receive 5 signals");
+
+    QVERIFY2(pHAL->isFinished(), "Thread is not finished yet.");
+
+    delete pHAL;
 }
 
 void HALTest::signal_measuredBoilerTemp()

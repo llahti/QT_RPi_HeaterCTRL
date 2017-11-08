@@ -24,11 +24,6 @@ public:
   void stopUpdates();
 
 
-
-
-
-
-
   enum DataValues {
     BoilerTemp,
     ExtGasTemp,
@@ -54,9 +49,9 @@ private:
   // Keep information of hardware type
   QString hwType;
   // Timer for updating values
-  QTimer* timer = nullptr;
+  //QTimer* timer = nullptr;
   void run();
-  int period;
+  int period_ms;
 };
 
 enum HALErrors {

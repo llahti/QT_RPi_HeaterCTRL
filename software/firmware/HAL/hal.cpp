@@ -16,9 +16,9 @@ HAL::~HAL()
     delete HAL_instance;
   }
 
-  if (timer) {
-      timer->stop();
-      delete timer;
+  if (this->isRunning()) {
+      this->requestInterruption();
+      this->exit(0);
   }
 }
 
@@ -98,7 +98,6 @@ void HAL::setExtFanSpeed(double value)
 
 void HAL::updateValues()
 {
-  qDebug() << "HAL::updateValues()";
   if (HAL_instance) {
     // Variables for data
     double boilerTemp;
@@ -123,49 +122,29 @@ void HAL::updateValues()
 
 void HAL::run()
 {
+    //qDebug() << "Thread is running";
   while(!this->isInterruptionRequested()) {
-      emit updateValues();
-      this->msleep(period);
-    }
+    updateValues();
+    //qDebug() << "Update!";
+    this->msleep(this->period_ms);
+  }
 }
 
 int HAL::startUpdates(const double period)
 {
-  int period_ms = period*1000;
-  qDebug() << "HAL::startUpdates(" << period << ")";
-  if (timer) {
-      return HALErrors::TimerAlreadyRunning;
-    }
+  this->period_ms = period * 1000;
+  this->start();
 
-  timer = new QTimer(this);
-  timer->setInterval(period_ms);
-  timer->setSingleShot(false);
-
-  if (!timer) {qDebug() << "HAL::updateValues() Can't start timer";}
-
-  connect(timer, SIGNAL(timeout()), this, SLOT(updateValues()));
-
-  timer->start(period*1000);
-
-  qDebug() << "Remaining timer time" << timer->remainingTime();
-  QThread::sleep(2);
-  qDebug() << "Remaining timer time" << timer->remainingTime();
-
-
-  qDebug() << "HAL::startTimer() ... returning to caller.";
   return HALErrors::NoError;
 }
 
 void HAL::stopUpdates()
 {
-  qDebug() << "HAL::stopTimer()";
-  if (timer) {
-      timer->stop();
-      delete timer;
-      timer = nullptr;
-      //this->exit(0);  // Stop event loop
-      //this->stopTimer();
-      //this->wait();
-
+  //qDebug() << "HAL::stopTimer()";
+  if (this->isRunning()) {
+    this->requestInterruption();
+    //this->exit(0);  // Stop event loop
+    //this->stopTimer();
+    this->wait();
   }
 }
