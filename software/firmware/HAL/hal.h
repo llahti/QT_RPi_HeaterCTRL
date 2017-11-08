@@ -7,24 +7,26 @@
 #include <QMutex>
 #include <QThread>
 #include <QTimer>
+#include <QDebug>
 
-
-
-
-class HAL : public QObject
+class HAL : public QThread
 {
 Q_OBJECT
 
 public:
-  //HAL(QString hwtype);
   explicit HAL(QObject *parent = Q_NULLPTR);
   ~HAL();
   QString getHWType();
   int init();
   HAL_interface* HALinstance() { return this->HAL_instance; }
   int setHWType(QString hwtype);
-  int startTimer(const double period=1000);
-  void stopTimer();
+  int startUpdates(const double period=1);  // time in seconds
+  void stopUpdates();
+
+
+
+
+
 
 
   enum DataValues {
@@ -45,13 +47,16 @@ public slots:
   void setExtFanSpeed(const double value);
   void updateValues();
 
+
 private:
   // Store pointer to device specific HAL
   HAL_interface* HAL_instance = nullptr;
   // Keep information of hardware type
   QString hwType;
   // Timer for updating values
-  QTimer* valueUpdater = nullptr;
+  QTimer* timer = nullptr;
+  void run();
+  int period;
 };
 
 enum HALErrors {

@@ -3,4 +3,6 @@ TEMPLATE = subdirs
 SUBDIRS += \
     heaterdata_test \
     heatercontroller \
-    HAL
+    HAL \
+    TimerTest \
+    HALTimer
