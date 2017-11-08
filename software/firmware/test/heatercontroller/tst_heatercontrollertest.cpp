@@ -37,13 +37,13 @@ void HeatercontrollerTest::HeaterController_Constructor()
   //HeaterController hc(this);
   HeaterController* hc = new HeaterController(this);
   QVERIFY2(hc != 0, "Failure to create HeaterController");
-  QVERIFY2(hc->Controller == 0, "hc->Controller should be NULL");
+  //QVERIFY2(hc->Controller == 0, "hc->Controller should be NULL");
 }
 
 void HeatercontrollerTest::HeaterController_StartController()
 {
   HeaterController hc(this);
-  hc.StartController();
+  //hc.StartController();
 }
 
 

@@ -17,7 +17,7 @@ Q_OBJECT
 
 public:
   //HAL(QString hwtype);
-  HAL(QObject *parent = Q_NULLPTR);
+  explicit HAL(QObject *parent = Q_NULLPTR);
   ~HAL();
   QString getHWType();
   int init();

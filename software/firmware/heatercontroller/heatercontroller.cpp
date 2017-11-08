@@ -2,25 +2,27 @@
 #include "hal.h"
 
 
-HeaterController::HeaterController(QObject* parent)
+HeaterController::HeaterController(QObject* parent) : QObject(parent)
 {
-  this->setParent(parent);
+  HAL *phal = new HAL(this);
+  delete phal;
+  //pHal = new HAL(this);
 }
 
 HeaterController::~HeaterController()
 {
-  if (hal) {
-    delete hal;
+  if (pHal) {
+    //delete pHal;
   }
 }
 
+/*
 int HeaterController::StartController()
 {
   // Initialize HAL layer
-  HAL phal = new HAL(this);
-  hal = new HAL(this);
-  hal->setHWType("hal_dummy");
-  if (hal->init()) {
+  pHal = new HAL(this);
+  pHal->setHWType("hal_dummy");
+  if (pHal->init()) {
     return 1;
   }
   // TODO: Start controller thread
@@ -28,3 +30,4 @@ int HeaterController::StartController()
 
   return 0;
 }
+*/

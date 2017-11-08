@@ -4,9 +4,8 @@
 //#include <iostream>
 
 
-HAL::HAL(QObject *parent)
+HAL::HAL(QObject *parent) : QObject(parent)
 {
-  this->setParent(parent);
   this->setHWType("");
 }
 

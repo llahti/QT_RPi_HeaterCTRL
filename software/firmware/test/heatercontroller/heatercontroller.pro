@@ -33,21 +33,6 @@ SOURCES += \
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 
-win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../../HAL/release/ -lHAL
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../../HAL/debug/ -lHAL
-else:unix: LIBS += -L$$OUT_PWD/../../HAL/ -lHAL
-
-INCLUDEPATH += $$PWD/../../HAL
-DEPENDPATH += $$PWD/../../HAL
-
-win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../HAL/release/libHAL.a
-else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../HAL/debug/libHAL.a
-else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../HAL/release/HAL.lib
-else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../HAL/debug/HAL.lib
-else:unix: PRE_TARGETDEPS += $$OUT_PWD/../../HAL/libHAL.a
-
-
-
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../../heatercontroller/release/ -lheatercontroller
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../../heatercontroller/debug/ -lheatercontroller
 else:unix: LIBS += -L$$OUT_PWD/../../heatercontroller/ -lheatercontroller
@@ -60,3 +45,16 @@ else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../h
 else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../heatercontroller/release/heatercontroller.lib
 else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../heatercontroller/debug/heatercontroller.lib
 else:unix: PRE_TARGETDEPS += $$OUT_PWD/../../heatercontroller/libheatercontroller.a
+
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../../HAL/release/ -lHAL
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../../HAL/debug/ -lHAL
+else:unix: LIBS += -L$$OUT_PWD/../../HAL/ -lHAL
+
+INCLUDEPATH += $$PWD/../../HAL
+DEPENDPATH += $$PWD/../../HAL
+
+win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../HAL/release/libHAL.a
+else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../HAL/debug/libHAL.a
+else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../HAL/release/HAL.lib
+else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../HAL/debug/HAL.lib
+else:unix: PRE_TARGETDEPS += $$OUT_PWD/../../HAL/libHAL.a

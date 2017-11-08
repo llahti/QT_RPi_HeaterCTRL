@@ -4,18 +4,18 @@
 #include <QThread>
 #include "hal.h"
 
-class HeaterController : QObject
+class HeaterController : public QObject
 {
 Q_OBJECT
 
 public:
-  HeaterController(QObject* parent = Q_NULLPTR);
+  explicit HeaterController(QObject* parent = Q_NULLPTR);
   ~HeaterController();
-  int StartController();
-  QThread* Controller = nullptr;
+  //int StartController();
+  //QThread* Controller = nullptr;
 
 private:
-  HAL* hal = nullptr;
+  HAL* pHal = Q_NULLPTR;
 };
 
 #endif // HEATERCONTROLLER_H

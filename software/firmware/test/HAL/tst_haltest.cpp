@@ -42,7 +42,7 @@ void HALTest::constructor_empty()
 {
   HAL hal(this);
   QVERIFY2(true, "Failure");
-  HAL phal = new HAL(this);
+  HAL *phal = new HAL(this);
   QVERIFY2(phal != 0, "Can't create a new HAL instance");
   delete phal;
 }
