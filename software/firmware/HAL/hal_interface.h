@@ -1,12 +1,11 @@
 #ifndef HAL_INTERFACE_H
 #define HAL_INTERFACE_H
 
-// TODO: Add destructor to interface and to real hal classes
-
 class HAL_interface
 {
 public:
   HAL_interface() {}
+  virtual ~HAL_interface() {}
   virtual int measureBoilerTemp(double& result) = 0;
   virtual int measureExtGasTemp(double& result) = 0;
   virtual int getCirculationPump(bool& state) = 0;

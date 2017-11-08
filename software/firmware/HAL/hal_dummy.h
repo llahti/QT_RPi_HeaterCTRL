@@ -7,6 +7,7 @@ class hal_dummy : public HAL_interface
 {
 public:
   hal_dummy() {}
+  ~hal_dummy() {}
   int measureBoilerTemp(double& result) override;
   int measureExtGasTemp(double& result) override;
   int getCirculationPump(bool& state) override;
