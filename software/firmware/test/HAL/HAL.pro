@@ -27,7 +27,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += \
-        tst_haltest.cpp 
+        tst_haltest.cpp  
 
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
@@ -45,3 +45,5 @@ else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../H
 else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../HAL/release/HAL.lib
 else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../HAL/debug/HAL.lib
 else:unix: PRE_TARGETDEPS += $$OUT_PWD/../../HAL/libHAL.a
+
+HEADERS +=

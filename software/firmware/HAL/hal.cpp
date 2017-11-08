@@ -1,10 +1,11 @@
 #include "hal.h"
 #include "hal_interface.h"
 #include "hal_dummy.h"
+#include <QDebug>
 //#include <iostream>
 
 
-HAL::HAL(QObject *parent) : QObject(parent)
+HAL::HAL(QObject *parent) : QThread(parent)
 {
   this->setHWType("");
 }
@@ -15,9 +16,9 @@ HAL::~HAL()
     delete HAL_instance;
   }
 
-  if (valueUpdater) {
-      valueUpdater->stop();
-      delete valueUpdater;
+  if (timer) {
+      timer->stop();
+      delete timer;
   }
 }
 
@@ -97,6 +98,7 @@ void HAL::setExtFanSpeed(double value)
 
 void HAL::updateValues()
 {
+  qDebug() << "HAL::updateValues()";
   if (HAL_instance) {
     // Variables for data
     double boilerTemp;
@@ -119,22 +121,51 @@ void HAL::updateValues()
   }
 }
 
-int HAL::startTimer(const double period)
+void HAL::run()
 {
-  if (valueUpdater) {
+  while(!this->isInterruptionRequested()) {
+      emit updateValues();
+      this->msleep(period);
+    }
+}
+
+int HAL::startUpdates(const double period)
+{
+  int period_ms = period*1000;
+  qDebug() << "HAL::startUpdates(" << period << ")";
+  if (timer) {
       return HALErrors::TimerAlreadyRunning;
     }
-  valueUpdater = new QTimer(this);
-  connect(valueUpdater, SIGNAL(timeout()), this, SLOT(updateValues()));
-  this->startTimer(period*1000);
+
+  timer = new QTimer(this);
+  timer->setInterval(period_ms);
+  timer->setSingleShot(false);
+
+  if (!timer) {qDebug() << "HAL::updateValues() Can't start timer";}
+
+  connect(timer, SIGNAL(timeout()), this, SLOT(updateValues()));
+
+  timer->start(period*1000);
+
+  qDebug() << "Remaining timer time" << timer->remainingTime();
+  QThread::sleep(2);
+  qDebug() << "Remaining timer time" << timer->remainingTime();
+
+
+  qDebug() << "HAL::startTimer() ... returning to caller.";
   return HALErrors::NoError;
 }
 
-void HAL::stopTimer()
+void HAL::stopUpdates()
 {
-  if (valueUpdater) {
-      valueUpdater->stop();
-      delete valueUpdater;
-      valueUpdater = nullptr;
+  qDebug() << "HAL::stopTimer()";
+  if (timer) {
+      timer->stop();
+      delete timer;
+      timer = nullptr;
+      //this->exit(0);  // Stop event loop
+      //this->stopTimer();
+      //this->wait();
+
   }
 }
