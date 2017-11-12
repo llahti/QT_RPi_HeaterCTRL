@@ -4,4 +4,5 @@ SUBDIRS += \
     heaterdata_test \
     heatercontroller \
     HAL \
-    CirculationPump
+    CirculationPump \
+    TimerTestExperiment
