@@ -142,6 +142,18 @@ void HAL::updateValues()
   }
 }
 
+/**
+ * @brief HAL::startUpdates
+ * This method starts the automatic updates. Internally it is using QObject's
+ * startTimer() to start frequent timer updates and it'll launch timerEvent()
+ * which then will call updateValues() method.
+ *
+ * In order this to work event loop must be running.
+ * I.e default QThread or Qapplication is needed.
+ *
+ * @param period update period in seconds
+ * @return HALError
+ */
 int HAL::startUpdates(const double period)
 {
   period_ms = period * 1000;
@@ -151,8 +163,6 @@ int HAL::startUpdates(const double period)
   if (!m_timerid) {  // m_timerid != 0 --> timer is already running
     m_timerid = startTimer(period_ms);
     if (m_timerid) {
-      // Timer will launch timerEvent() method as default
-      //connect(this, SIGNAL(timeout()), this, SLOT(updateValues()));
       return HALErrors::NoError;
     }
     else {
