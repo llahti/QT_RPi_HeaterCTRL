@@ -26,18 +26,18 @@ public:
   void stopUpdates();
 
 
-  enum DataValues {
-    BoilerTemp,
-    ExtGasTemp,
-    ExtFan,
-    CirculationPump
-  };
+//  enum DataValues {
+//    BoilerTemp,
+//    ExtGasTemp,
+//    ExtFan,
+//    CirculationPump
+//  };
 
 signals:
-  void measuredBoilerTemp(MeasurementPackage<double> meas);
-  void measuredExtGasTemp(MeasurementPackage<double> meas);
-  void changedCirculationPumpState(MeasurementPackage<bool> meas);
-  void changedExtFanSpeed(MeasurementPackage<double> meas);
+  void measuredBoilerTemp(MeasurementPackage meas);
+  void measuredExtGasTemp(MeasurementPackage meas);
+  void changedCirculationPumpState(MeasurementPackage meas);
+  void changedExtFanSpeed(MeasurementPackage meas);
 
 public slots:
   void setCirculationPump(const bool state);
@@ -50,15 +50,15 @@ private:
   HAL_interface* HAL_instance = nullptr;
   // Keep information of hardware type
   QString hwType;
-  // Timer for updating values
-  //QTimer* timer = nullptr;
-  void run();
+  // Period between measurements (valueUpdate)
   int period_ms;
-
+  // Timer ID of the timer which handles frequent measurements
   int m_timerid=0;
 
 protected:
-  void timerEvent(QTimerEvent *event) {updateValues();}
+  // when timerEvent() is launched by timer we just call updateValues
+  // in order to go through measurement cycle
+  void timerEvent(QTimerEvent *event) {Q_UNUSED(event); updateValues();}
 };
 
 enum HALErrors {

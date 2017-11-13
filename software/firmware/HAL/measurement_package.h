@@ -5,12 +5,12 @@
 #include <QDateTime>
 #include <QMetaType>
 #include <QObject>
+#include <QVariant>
 
 /**
  * @brief The MeasurementPackage class
  * This class provides way to pack several measurement values with timestamp
  */
-template <class T>
 class MeasurementPackage {
 public:
   QDateTime timestamp_;
@@ -28,13 +28,13 @@ public:
     ExtFan
   } sensor_location;
 
-  QVector<T> raw_measurements_;
+QVector<QVariant> raw_measurements_;
 
 };
 
-Q_DECLARE_METATYPE(MeasurementPackage<bool>)
-Q_DECLARE_METATYPE(MeasurementPackage<double>)
-Q_DECLARE_METATYPE(MeasurementPackage<int>)
-Q_DECLARE_METATYPE(MeasurementPackage<long>)
+Q_DECLARE_METATYPE(MeasurementPackage)
+//Q_DECLARE_METATYPE(MeasurementPackage<double>)
+//Q_DECLARE_METATYPE(MeasurementPackage<int>)
+//Q_DECLARE_METATYPE(MeasurementPackage<long>)
 #endif /* MEASUREMENT_PACKAGE_H_ */
 

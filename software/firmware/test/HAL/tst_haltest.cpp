@@ -120,10 +120,10 @@ void HALTest::start_stopUpdates()
     QVERIFY2(ret == 0, "Init didn't return 0");
 
     // We are using QSignalSpy to capture emitted signals
-    QSignalSpy spy1(pHAL, SIGNAL(measuredBoilerTemp(MeasurementPackage<double>)));
-    QSignalSpy spy2(pHAL, SIGNAL(measuredExtGasTemp(MeasurementPackage<double>)));
-    QSignalSpy spy3(pHAL, SIGNAL(changedCirculationPumpState(MeasurementPackage<bool>)));
-    QSignalSpy spy4(pHAL, SIGNAL(changedExtFanSpeed(MeasurementPackage<double>)));
+    QSignalSpy spy1(pHAL, SIGNAL(measuredBoilerTemp(MeasurementPackage)));
+    QSignalSpy spy2(pHAL, SIGNAL(measuredExtGasTemp(MeasurementPackage)));
+    QSignalSpy spy3(pHAL, SIGNAL(changedCirculationPumpState(MeasurementPackage)));
+    QSignalSpy spy4(pHAL, SIGNAL(changedExtFanSpeed(MeasurementPackage)));
 
     // Start timer and and keep it running N cycles
     double period = 0.2;
@@ -157,7 +157,7 @@ void HALTest::signal_measuredBoilerTemp()
   int ret;
 
   // We are using QSignalSpy to capture emitted signals
-  QSignalSpy spy(&hal, SIGNAL(measuredBoilerTemp(MeasurementPackage<double>)));
+  QSignalSpy spy(&hal, SIGNAL(measuredBoilerTemp(MeasurementPackage)));
   ret = hal.init();
   QVERIFY2(ret == 0, "Init didn't return 0");
 
@@ -168,8 +168,8 @@ void HALTest::signal_measuredBoilerTemp()
 
   // Check for correct data value
   QList<QVariant> args = spy.takeFirst();  // Take first signal arguments
-  MeasurementPackage<double> meas = args.at(0).value<MeasurementPackage<double>>();
-  double result = meas.raw_measurements_.at(0);
+  MeasurementPackage meas = args.at(0).value<MeasurementPackage>();
+  double result = meas.raw_measurements_.at(0).toDouble();
   QVERIFY2(80.5 == result, "Result was not 80.5");
   QVERIFY2(meas.timestamp_.secsTo(QDateTime::currentDateTime()) < 1
            , "Timestamp was more than 1 second too old");
@@ -182,7 +182,7 @@ void HALTest::signal_measuredExtGasTemp()
   int ret;
 
   // We are using QSignalSpy to capture emitted signals
-  QSignalSpy spy(&hal, SIGNAL(measuredExtGasTemp(MeasurementPackage<double>)));
+  QSignalSpy spy(&hal, SIGNAL(measuredExtGasTemp(MeasurementPackage)));
   ret = hal.init();
   QVERIFY2(ret == 0, "Init didn't return 0");
 
@@ -193,8 +193,8 @@ void HALTest::signal_measuredExtGasTemp()
 
   // Check for correct data value
   QList<QVariant> args = spy.takeFirst();  // Take first signal arguments
-  MeasurementPackage<double> meas = args.at(0).value<MeasurementPackage<double>>();
-  double result = meas.raw_measurements_.at(0);
+  MeasurementPackage meas = args.at(0).value<MeasurementPackage>();
+  double result = meas.raw_measurements_.at(0).toDouble();
   QVERIFY2(199.6 == result, "Result was not 199.6");
   QVERIFY2(meas.timestamp_.secsTo(QDateTime::currentDateTime()) < 1
            , "Timestamp was more than 1 second too old");
@@ -207,7 +207,7 @@ void HALTest::signal_changedCirculationPumpState()
   int ret;
 
   // We are using QSignalSpy to capture emitted signals
-  QSignalSpy spy(&hal, SIGNAL(changedCirculationPumpState(MeasurementPackage<bool>)));
+  QSignalSpy spy(&hal, SIGNAL(changedCirculationPumpState(MeasurementPackage)));
   ret = hal.init();
   QVERIFY2(ret == 0, "Init didn't return 0");
 
@@ -218,8 +218,8 @@ void HALTest::signal_changedCirculationPumpState()
 
   // Check for correct data value
   QList<QVariant> args = spy.takeFirst();  // Take first signal arguments
-  MeasurementPackage<bool> meas = args.at(0).value<MeasurementPackage<bool>>();
-  bool result = meas.raw_measurements_.at(0);
+  MeasurementPackage meas = args.at(0).value<MeasurementPackage>();
+  bool result = meas.raw_measurements_.at(0).toBool();
   QVERIFY2(result, "Result was not true");
   QVERIFY2(meas.timestamp_.secsTo(QDateTime::currentDateTime()) < 1
            , "Timestamp was more than 1 second too old");
@@ -232,7 +232,7 @@ void HALTest::signal_changedExtFanSpeed()
   int ret;
 
   // We are using QSignalSpy to capture emitted signals
-  QSignalSpy spy(&hal, SIGNAL(changedExtFanSpeed(MeasurementPackage<double>)));
+  QSignalSpy spy(&hal, SIGNAL(changedExtFanSpeed(MeasurementPackage)));
   ret = hal.init();
   QVERIFY2(ret == 0, "Init didn't return 0");
 
@@ -243,8 +243,8 @@ void HALTest::signal_changedExtFanSpeed()
 
   // Check for correct data value
   QList<QVariant> args = spy.takeFirst();  // Take first signal arguments
-  MeasurementPackage<double> meas = args.at(0).value<MeasurementPackage<double>>();
-  double result = meas.raw_measurements_.at(0);
+  MeasurementPackage meas = args.at(0).value<MeasurementPackage>();
+  double result = meas.raw_measurements_.at(0).toDouble();
   QVERIFY2(result == 41.5, "Result was not 41.5");
   QVERIFY2(meas.timestamp_.secsTo(QDateTime::currentDateTime()) < 1
            , "Timestamp was more than 1 second too old");
@@ -257,10 +257,10 @@ void HALTest::publicslot_updateValues()
   int ret;
 
   // We are using QSignalSpy to capture emitted signals
-  QSignalSpy spy1(&hal, SIGNAL(measuredBoilerTemp(MeasurementPackage<double>)));
-  QSignalSpy spy2(&hal, SIGNAL(measuredExtGasTemp(MeasurementPackage<double>)));
-  QSignalSpy spy3(&hal, SIGNAL(changedCirculationPumpState(MeasurementPackage<bool>)));
-  QSignalSpy spy4(&hal, SIGNAL(changedExtFanSpeed(MeasurementPackage<double>)));
+  QSignalSpy spy1(&hal, SIGNAL(measuredBoilerTemp(MeasurementPackage)));
+  QSignalSpy spy2(&hal, SIGNAL(measuredExtGasTemp(MeasurementPackage)));
+  QSignalSpy spy3(&hal, SIGNAL(changedCirculationPumpState(MeasurementPackage)));
+  QSignalSpy spy4(&hal, SIGNAL(changedExtFanSpeed(MeasurementPackage)));
   ret = hal.init();
   QVERIFY2(ret == 0, "Init didn't return 0");
 
@@ -280,7 +280,7 @@ void HALTest::publicslot_setCirculationPump()
   int ret;
 
   // We are using QSignalSpy to capture emitted signals
-  QSignalSpy spy(&hal, SIGNAL(changedCirculationPumpState(MeasurementPackage<bool>)));
+  QSignalSpy spy(&hal, SIGNAL(changedCirculationPumpState(MeasurementPackage)));
   ret = hal.init();
   QVERIFY2(ret == 0, "Init didn't return 0");
 
@@ -293,8 +293,8 @@ void HALTest::publicslot_setCirculationPump()
 
   // Check for correct data value
   QList<QVariant> args = spy.takeFirst();  // Take first signal arguments
-  MeasurementPackage<bool> meas = args.at(0).value<MeasurementPackage<bool>>();
-  bool result = meas.raw_measurements_.at(0);
+  MeasurementPackage meas = args.at(0).value<MeasurementPackage>();
+  bool result = meas.raw_measurements_.at(0).toBool();
   QVERIFY2(result == false, "Result was not false");
   QVERIFY2(meas.timestamp_.secsTo(QDateTime::currentDateTime()) < 1
            , "Timestamp was more than 1 second too old");
@@ -308,8 +308,8 @@ void HALTest::publicslot_setCirculationPump()
 
   // Check for correct data value
   QList<QVariant> args2 = spy.takeFirst();  // Take first signal arguments
-  MeasurementPackage<bool> meas2 = args2.at(0).value<MeasurementPackage<bool>>();
-  bool result2 = meas2.raw_measurements_.at(0);
+  MeasurementPackage meas2 = args2.at(0).value<MeasurementPackage>();
+  bool result2 = meas2.raw_measurements_.at(0).toBool();
   QVERIFY2(result2 == true, "Result was not true");
   QVERIFY2(meas2.timestamp_.secsTo(QDateTime::currentDateTime()) < 1
            , "Timestamp was more than 1 second too old");
@@ -322,7 +322,7 @@ void HALTest::publicslot_setExtFanSpeed()
   int ret;
 
   // We are using QSignalSpy to capture emitted signals
-  QSignalSpy spy(&hal, SIGNAL(changedExtFanSpeed(MeasurementPackage<double>)));
+  QSignalSpy spy(&hal, SIGNAL(changedExtFanSpeed(MeasurementPackage)));
   ret = hal.init();
   QVERIFY2(ret == 0, "Init didn't return 0");
 
@@ -333,8 +333,8 @@ void HALTest::publicslot_setExtFanSpeed()
 
   // Check for correct data value
   QList<QVariant> args = spy.takeFirst();  // Take first signal arguments
-  MeasurementPackage<double> meas = args.at(0).value<MeasurementPackage<double>>();
-  double result = meas.raw_measurements_.at(0);
+  MeasurementPackage meas = args.at(0).value<MeasurementPackage>();
+  double result = meas.raw_measurements_.at(0).toDouble();
   QVERIFY2(result == 69.0, "Result was not 69.0");
   QVERIFY2(meas.timestamp_.secsTo(QDateTime::currentDateTime()) < 1
            , "Timestamp was more than 1 second too old");

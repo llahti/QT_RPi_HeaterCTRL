@@ -81,7 +81,7 @@ int HAL::setHWType(QString hwtype)
 void HAL::setCirculationPump(bool state)
 {
   if (HAL_instance){
-    MeasurementPackage<bool> circulationPump;
+    MeasurementPackage circulationPump;
     HAL_instance->setCirculationPump(state);
     circulationPump.timestamp_ = QDateTime::currentDateTime();
     circulationPump.raw_measurements_.append(state);
@@ -93,7 +93,7 @@ void HAL::setCirculationPump(bool state)
 void HAL::setExtFanSpeed(double value)
 {
   if (HAL_instance) {
-    MeasurementPackage<double> ExtFan;
+    MeasurementPackage ExtFan;
     HAL_instance->setExtFanSpeed(value);
     ExtFan.timestamp_ = QDateTime::currentDateTime();
     ExtFan.raw_measurements_.append(value);
@@ -106,10 +106,10 @@ void HAL::updateValues()
 {
   if (HAL_instance) {
     // Variables for data
-    MeasurementPackage<double> boilerTemp;
-    MeasurementPackage<double> extGasTemp;
-    MeasurementPackage<bool> circulationPump;
-    MeasurementPackage<double> ExtFan;
+    MeasurementPackage boilerTemp;
+    MeasurementPackage extGasTemp;
+    MeasurementPackage circulationPump;
+    MeasurementPackage ExtFan;
 
     // h for short
     HAL_interface* h = HAL_instance;
