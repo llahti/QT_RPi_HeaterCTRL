@@ -5,5 +5,4 @@ SUBDIRS += \
     HAL \
     heatercontroller \
     gui \
-    test \
-    CirculationPump
+    test
