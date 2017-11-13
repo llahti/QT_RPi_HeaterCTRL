@@ -1,7 +1,6 @@
 #ifndef HAL_H
 #define HAL_H
 
-#include "hal_interface.h"
 #include <QString>
 #include <string>
 #include <QMutex>
@@ -9,7 +8,10 @@
 #include <QTimer>
 #include <QDebug>
 
-class HAL : public QThread
+#include "hal_interface.h"
+#include "measurement_package.h"
+
+class HAL : public QObject
 {
 Q_OBJECT
 
@@ -32,10 +34,10 @@ public:
   };
 
 signals:
-  void measuredBoilerTemp(const double value);
-  void measuredExtGasTemp(const double value);
-  void changedCirculationPumpState(const bool state);
-  void changedExtFanSpeed(const double value);
+  void measuredBoilerTemp(MeasurementPackage<double> meas);
+  void measuredExtGasTemp(MeasurementPackage<double> meas);
+  void changedCirculationPumpState(MeasurementPackage<bool> meas);
+  void changedExtFanSpeed(MeasurementPackage<double> meas);
 
 public slots:
   void setCirculationPump(const bool state);
@@ -52,6 +54,11 @@ private:
   //QTimer* timer = nullptr;
   void run();
   int period_ms;
+
+  int m_timerid=0;
+
+protected:
+  void timerEvent(QTimerEvent *event) {updateValues();}
 };
 
 enum HALErrors {
@@ -61,7 +68,8 @@ enum HALErrors {
   HWTypeNotRecognized,
   UnknownError,
   HALNotInitialized,
-  TimerAlreadyRunning
+  TimerAlreadyRunning,
+  CantStartTimer
 };
 
 #endif // HAL_H

@@ -1,11 +1,11 @@
+#include <QDebug>
+
 #include "hal.h"
 #include "hal_interface.h"
 #include "hal_dummy.h"
-#include <QDebug>
-//#include <iostream>
 
 
-HAL::HAL(QObject *parent) : QThread(parent)
+HAL::HAL(QObject *parent) : QObject(parent)
 {
   this->setHWType("");
 }
@@ -16,10 +16,10 @@ HAL::~HAL()
     delete HAL_instance;
   }
 
-  if (this->isRunning()) {
-      this->requestInterruption();
-      this->exit(0);
-  }
+//  if (this->isRunning()) {
+//      this->requestInterruption();
+//      this->exit(0);
+//  }
 }
 
 /**
@@ -81,8 +81,11 @@ int HAL::setHWType(QString hwtype)
 void HAL::setCirculationPump(bool state)
 {
   if (HAL_instance){
+    MeasurementPackage<bool> circulationPump;
     HAL_instance->setCirculationPump(state);
-    emit changedCirculationPumpState(state);
+    circulationPump.timestamp_ = QDateTime::currentDateTime();
+    circulationPump.raw_measurements_.append(state);
+    emit changedCirculationPumpState(circulationPump);
   }
 }
 
@@ -90,8 +93,11 @@ void HAL::setCirculationPump(bool state)
 void HAL::setExtFanSpeed(double value)
 {
   if (HAL_instance) {
+    MeasurementPackage<double> ExtFan;
     HAL_instance->setExtFanSpeed(value);
-    emit changedExtFanSpeed(value);
+    ExtFan.timestamp_ = QDateTime::currentDateTime();
+    ExtFan.raw_measurements_.append(value);
+    emit changedExtFanSpeed(ExtFan);
   }
 }
 
@@ -100,51 +106,73 @@ void HAL::updateValues()
 {
   if (HAL_instance) {
     // Variables for data
-    double boilerTemp;
-    double extGasTemp;
-    bool circulationPump;
-    double ExtFan;
+    MeasurementPackage<double> boilerTemp;
+    MeasurementPackage<double> extGasTemp;
+    MeasurementPackage<bool> circulationPump;
+    MeasurementPackage<double> ExtFan;
 
-    // Measure
-    HAL_interface* h = HAL_instance;  // h for short
-    h->measureBoilerTemp(boilerTemp);
-    h->measureExtGasTemp(extGasTemp);
-    h->getCirculationPump(circulationPump);
-    h->getExtFanSpeed(ExtFan);
+    // h for short
+    HAL_interface* h = HAL_instance;
 
-    // Emit signals
+    // Measure Boiler Temp
+    double meas;
+    h->measureBoilerTemp(meas);
+    boilerTemp.timestamp_ = QDateTime::currentDateTime();
+    boilerTemp.raw_measurements_.append(meas);
     emit measuredBoilerTemp(boilerTemp);
-    emit measuredExtGasTemp(extGasTemp);
-    emit changedCirculationPumpState(circulationPump);
-    emit changedExtFanSpeed(ExtFan);
-  }
-}
 
-void HAL::run()
-{
-    //qDebug() << "Thread is running";
-  while(!this->isInterruptionRequested()) {
-    updateValues();
-    //qDebug() << "Update!";
-    this->msleep(this->period_ms);
+    // Measure ExtGas Temp
+    h->measureExtGasTemp(meas);
+    extGasTemp.timestamp_ = QDateTime::currentDateTime();
+    extGasTemp.raw_measurements_.append(meas);
+    emit measuredExtGasTemp(extGasTemp);
+
+    // Get Circulation Pump State
+    bool pump;
+    h->getCirculationPump(pump);
+    circulationPump.timestamp_ = QDateTime::currentDateTime();
+    circulationPump.raw_measurements_.append(pump);
+    emit changedCirculationPumpState(circulationPump);
+
+    // Get ExtFan Speed
+    h->getExtFanSpeed(meas);
+    ExtFan.timestamp_ = QDateTime::currentDateTime();
+    ExtFan.raw_measurements_.append(meas);
+    emit changedExtFanSpeed(ExtFan);
   }
 }
 
 int HAL::startUpdates(const double period)
 {
-  this->period_ms = period * 1000;
-  this->start();
+  period_ms = period * 1000;
 
-  return HALErrors::NoError;
+  // Here we check is timer already running and that it can be started
+  // If can't then return corresponding error codes
+  if (!m_timerid) {  // m_timerid != 0 --> timer is already running
+    m_timerid = startTimer(period_ms);
+    if (m_timerid) {
+      // Timer will launch timerEvent() method as default
+      //connect(this, SIGNAL(timeout()), this, SLOT(updateValues()));
+      return HALErrors::NoError;
+    }
+    else {
+        return HALErrors::CantStartTimer;
+    }
+    // END INNER IF
+  }
+  else {
+    return HALErrors::TimerAlreadyRunning;
+  }
+  // END OUTER IF
+  return HALErrors::UnknownError;
 }
 
 void HAL::stopUpdates()
 {
-  //qDebug() << "HAL::stopTimer()";
-  if (this->isRunning()) {
-    this->requestInterruption();
-    //this->exit(0);  // Stop event loop
-    //this->stopTimer();
-    this->wait();
+  if (m_timerid) {
+    // Timer will launch timerEvent() method as default
+    //disconnect(this, SIGNAL(timeout()), this, SLOT(updateValues()));
+    killTimer(m_timerid);
+    m_timerid = 0;
   }
 }

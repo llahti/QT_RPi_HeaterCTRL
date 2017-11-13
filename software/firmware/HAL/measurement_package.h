@@ -1,25 +1,32 @@
 #ifndef MEASUREMENT_PACKAGE_H_
 #define MEASUREMENT_PACKAGE_H_
 
-#include <QList>
+#include <QVector>
 #include <QDateTime>
+#include <QMetaType>
+#include <QObject>
 
 /**
  * @brief The MeasurementPackage class
- * This class provides way to pack several measurement value with timestamp
+ * This class provides way to pack several measurement values with timestamp
  */
+template <class T>
 class MeasurementPackage {
 public:
   QDateTime timestamp_;
 
   enum SensorType{
-    TEMPERATURE,
+    TEMP_PT100,
     BOOLEAN
   } sensor_type_;
 
-  QList raw_measurements_;
+  QVector<T> raw_measurements_;
 
 };
 
+Q_DECLARE_METATYPE(MeasurementPackage<bool>)
+Q_DECLARE_METATYPE(MeasurementPackage<double>)
+Q_DECLARE_METATYPE(MeasurementPackage<int>)
+Q_DECLARE_METATYPE(MeasurementPackage<long>)
 #endif /* MEASUREMENT_PACKAGE_H_ */
 
