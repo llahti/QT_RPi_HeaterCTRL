@@ -1,5 +1,5 @@
-#ifndef CONTROLLERONOFF_H
-#define CONTROLLERONOFF_H
+#ifndef CONTROLLER_BOILER_SIMPLE_H
+#define CONTROLLER_BOILER_SIMPLE_H
 
 #include <QThread>
 #include "controller_interface.h"
@@ -16,10 +16,9 @@ class ControllerONOFF : public ControllerPlugin
 
 public:
   ControllerONOFF(QObject* parent = Q_NULLPTR);
-  void run() override;
 
 private:
 
 };
 
-#endif // CONTROLLERONOFF_H
+#endif // CONTROLLER_BOILER_SIMPLE_H

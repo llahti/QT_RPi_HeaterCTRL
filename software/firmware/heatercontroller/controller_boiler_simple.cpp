@@ -1,17 +1,7 @@
 #include "controller_boiler_simple.h"
 #include <iostream>
 
-ControllerONOFF::ControllerONOFF(QObject* parent)
+ControllerONOFF::ControllerONOFF(QObject* parent) : ControllerPlugin(parent)
 {
-  this->setParent(parent);
-}
 
-void ControllerONOFF::run()
-{
-  while(!stopThread)
-    {
-      std::cout<<"Running...." << std::endl;
-      this->sleep(1000); // Wait 1000msec
-    }
-  this->exit(0);
 }

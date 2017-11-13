@@ -4,6 +4,7 @@
 #include <QThread>
 #include "hal.h"
 
+
 class HeaterController : public QObject
 {
 Q_OBJECT
