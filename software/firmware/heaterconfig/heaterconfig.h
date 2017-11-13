@@ -4,13 +4,8 @@
 #include <QString>
 #include <QSettings>
 #include <string>
+#include "app_globals.h"
 
-#ifndef COMPANYNAME
-  #define COMPANYNAME "LauriLahti"
-#endif
-#ifndef APPNAME
-  #define APPNAME "HeaterController"
-#endif
 
 class HeaterConfig : QObject
 {

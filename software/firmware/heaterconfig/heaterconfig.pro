@@ -25,7 +25,8 @@ SOURCES += \
     heaterconfig.cpp
 
 HEADERS += \
-    heaterconfig.h
+    heaterconfig.h \
+    app_globals.h
 unix {
     target.path = /usr/lib
     INSTALLS += target
