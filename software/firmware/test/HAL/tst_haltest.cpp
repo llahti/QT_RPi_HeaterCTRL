@@ -171,6 +171,8 @@ void HALTest::signal_measuredBoilerTemp()
   MeasurementPackage<double> meas = args.at(0).value<MeasurementPackage<double>>();
   double result = meas.raw_measurements_.at(0);
   QVERIFY2(80.5 == result, "Result was not 80.5");
+  QVERIFY2(meas.timestamp_.secsTo(QDateTime::currentDateTime()) < 1
+           , "Timestamp was more than 1 second too old");
 }
 
 void HALTest::signal_measuredExtGasTemp()
@@ -194,6 +196,8 @@ void HALTest::signal_measuredExtGasTemp()
   MeasurementPackage<double> meas = args.at(0).value<MeasurementPackage<double>>();
   double result = meas.raw_measurements_.at(0);
   QVERIFY2(199.6 == result, "Result was not 199.6");
+  QVERIFY2(meas.timestamp_.secsTo(QDateTime::currentDateTime()) < 1
+           , "Timestamp was more than 1 second too old");
 }
 
 void HALTest::signal_changedCirculationPumpState()
@@ -217,6 +221,8 @@ void HALTest::signal_changedCirculationPumpState()
   MeasurementPackage<bool> meas = args.at(0).value<MeasurementPackage<bool>>();
   bool result = meas.raw_measurements_.at(0);
   QVERIFY2(result, "Result was not true");
+  QVERIFY2(meas.timestamp_.secsTo(QDateTime::currentDateTime()) < 1
+           , "Timestamp was more than 1 second too old");
 }
 
 void HALTest::signal_changedExtFanSpeed()
@@ -240,6 +246,8 @@ void HALTest::signal_changedExtFanSpeed()
   MeasurementPackage<double> meas = args.at(0).value<MeasurementPackage<double>>();
   double result = meas.raw_measurements_.at(0);
   QVERIFY2(result == 41.5, "Result was not 41.5");
+  QVERIFY2(meas.timestamp_.secsTo(QDateTime::currentDateTime()) < 1
+           , "Timestamp was more than 1 second too old");
 }
 
 void HALTest::publicslot_updateValues()
@@ -288,6 +296,8 @@ void HALTest::publicslot_setCirculationPump()
   MeasurementPackage<bool> meas = args.at(0).value<MeasurementPackage<bool>>();
   bool result = meas.raw_measurements_.at(0);
   QVERIFY2(result == false, "Result was not false");
+  QVERIFY2(meas.timestamp_.secsTo(QDateTime::currentDateTime()) < 1
+           , "Timestamp was more than 1 second too old");
 
   // Test True setting
   hal.setCirculationPump(true);
@@ -301,6 +311,8 @@ void HALTest::publicslot_setCirculationPump()
   MeasurementPackage<bool> meas2 = args2.at(0).value<MeasurementPackage<bool>>();
   bool result2 = meas2.raw_measurements_.at(0);
   QVERIFY2(result2 == true, "Result was not true");
+  QVERIFY2(meas2.timestamp_.secsTo(QDateTime::currentDateTime()) < 1
+           , "Timestamp was more than 1 second too old");
 }
 
 void HALTest::publicslot_setExtFanSpeed()
@@ -314,7 +326,7 @@ void HALTest::publicslot_setExtFanSpeed()
   ret = hal.init();
   QVERIFY2(ret == 0, "Init didn't return 0");
 
-  // Emit update signals
+  // Emit update signals by calling setExtFanSpeed()
   hal.setExtFanSpeed(69.0);
   // Check that we got one signal
   QVERIFY2(spy.count() == 1, "Didn't receive one signal");
@@ -324,6 +336,8 @@ void HALTest::publicslot_setExtFanSpeed()
   MeasurementPackage<double> meas = args.at(0).value<MeasurementPackage<double>>();
   double result = meas.raw_measurements_.at(0);
   QVERIFY2(result == 69.0, "Result was not 69.0");
+  QVERIFY2(meas.timestamp_.secsTo(QDateTime::currentDateTime()) < 1
+           , "Timestamp was more than 1 second too old");
 }
 
 
