@@ -29,7 +29,8 @@ SOURCES += \
 HEADERS += \
         hal.h \
     hal_dummy.h \
-    hal_interface.h
+    hal_interface.h \
+    measurement_package.h
 
 unix {
     target.path = /usr/lib
