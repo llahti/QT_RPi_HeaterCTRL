@@ -20,6 +20,13 @@ public:
     BOOLEAN
   } sensor_type_;
 
+  enum SensorLocation {
+    Boiler,
+    ExtGas,
+    CircPump,
+    ExtFan
+  } sensor_location;
+
   QVector<T> raw_measurements_;
 
 };
