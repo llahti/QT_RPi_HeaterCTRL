@@ -17,7 +17,8 @@ public:
 
   enum SensorType{
     TEMP_PT100,
-    BOOLEAN
+    BOOLEAN,
+    PERCENTAGE
   } sensor_type_;
 
   enum SensorLocation {

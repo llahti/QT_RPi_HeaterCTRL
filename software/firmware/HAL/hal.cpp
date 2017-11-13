@@ -119,12 +119,16 @@ void HAL::updateValues()
     h->measureBoilerTemp(meas);
     boilerTemp.timestamp_ = QDateTime::currentDateTime();
     boilerTemp.raw_measurements_.append(meas);
+    boilerTemp.sensor_type_ = MeasurementPackage::SensorType::TEMP_PT100;
+    boilerTemp.sensor_location = MeasurementPackage::SensorLocation::Boiler;
     emit measuredBoilerTemp(boilerTemp);
 
     // Measure ExtGas Temp
     h->measureExtGasTemp(meas);
     extGasTemp.timestamp_ = QDateTime::currentDateTime();
     extGasTemp.raw_measurements_.append(meas);
+    extGasTemp.sensor_type_ = MeasurementPackage::SensorType::TEMP_PT100;
+    extGasTemp.sensor_location = MeasurementPackage::SensorLocation::ExtGas;
     emit measuredExtGasTemp(extGasTemp);
 
     // Get Circulation Pump State
@@ -132,12 +136,16 @@ void HAL::updateValues()
     h->getCirculationPump(pump);
     circulationPump.timestamp_ = QDateTime::currentDateTime();
     circulationPump.raw_measurements_.append(pump);
+    circulationPump.sensor_type_ = MeasurementPackage::SensorType::BOOLEAN;
+    circulationPump.sensor_location = MeasurementPackage::SensorLocation::CircPump;
     emit changedCirculationPumpState(circulationPump);
 
     // Get ExtFan Speed
     h->getExtFanSpeed(meas);
     ExtFan.timestamp_ = QDateTime::currentDateTime();
     ExtFan.raw_measurements_.append(meas);
+    ExtFan.sensor_type_ = MeasurementPackage::SensorType::PERCENTAGE;
+    ExtFan.sensor_location = MeasurementPackage::SensorLocation::ExtFan;
     emit changedExtFanSpeed(ExtFan);
   }
 }
