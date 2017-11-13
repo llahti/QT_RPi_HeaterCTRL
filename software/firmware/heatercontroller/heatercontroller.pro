@@ -24,13 +24,12 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         heatercontroller.cpp \
-    controllerplugin.cpp \
-    controlleronoff.cpp
+    controller_boiler_simple.cpp
 
 HEADERS += \
         heatercontroller.h \
-    controllerplugin.h \
-    controlleronoff.h
+    controller_interface.h \
+    controller_boiler_simple.h
 
 unix {
     target.path = /usr/lib

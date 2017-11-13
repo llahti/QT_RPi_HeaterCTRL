@@ -2,7 +2,7 @@
 #define CONTROLLERONOFF_H
 
 #include <QThread>
-#include "controllerplugin.h"
+#include "controller_interface.h"
 
 // TODO: Begin to implement controller
 

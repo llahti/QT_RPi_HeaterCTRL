@@ -1,24 +1,26 @@
-#ifndef CONTROLLERPLUGIN_H
-#define CONTROLLERPLUGIN_H
+#ifndef CONTROLLER_INTERFACE_H
+#define CONTROLLER_INTERFACE_H
 
-#include <QThread>
+#include <QObject>
+#include "measurement_package.h"
 
 /**
  * @brief The ControllerPlugin class
- * This is a base class for boiler controllers
+ * This is a base class for boiler controller plugins
  */
-class ControllerPlugin : public QThread
+class ControllerPlugin : public QObject
 {
   Q_OBJECT
 
 public:
-  ControllerPlugin(QObject* parent = Q_NULLPTR);
-  virtual void run();
+  ControllerPlugin(QObject* parent = Q_NULLPTR) : QObject(parent) {}
 
+public slots:
+  // Receives measurement and runs one control cycle
+  virtual void ProcessMeasurement(MeasurementPackage measpack);
+  // Should read latest settings and apply those into controller
+  virtual void RefreshSettings();
 
-
-protected:
-  bool stopThread; // Flag to stop thread
 };
 
-#endif // CONTROLLERPLUGIN_H
+#endif // CONTROLLER_INTERFACE_H
