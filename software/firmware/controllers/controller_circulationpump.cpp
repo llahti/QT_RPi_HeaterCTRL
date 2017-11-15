@@ -96,5 +96,6 @@ void Controller_CirculationPump::FixSettings()
   if (!settings.contains(STOPTEMPKEY)) {
     settings.setValue(STOPTEMPKEY, 75.0);  // Pump stop temperature
   }
+
   settings.endGroup();
 }
