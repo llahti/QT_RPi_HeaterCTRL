@@ -17,6 +17,9 @@ private Q_SLOTS:
     void initTestCase();
     void cleanupTestCase();
     void ResetSettings();
+    void RefreshSettings();
+    void Initialize();
+    void ProcessMeasurement();
 
 private:
     HAL *m_pHAL = Q_NULLPTR;
@@ -76,6 +79,44 @@ void Controller_circulationpump_test::ResetSettings()
   QStringList keys = settings.childKeys();
   settings.endGroup();
   QCOMPARE(keys.count(), 4);
+}
+
+void Controller_circulationpump_test::RefreshSettings()
+{
+  // Set defaults
+  //m_pC_CP->ResetSettings();
+
+  // Set new values
+  QSettings settings(COMPANYNAME, APPNAME);
+  settings.beginGroup(m_settingsGroup);
+  settings.setValue("Version", 1);
+  settings.setValue("AutoControl", false);
+  settings.setValue("StartTemperature", 70.0);
+  settings.setValue("StopTemperature", 60.0);
+  settings.endGroup();
+
+  // Read settings values onto instance
+  m_pC_CP->RefreshSettings();
+
+  // Check that settings exist and that those are of correct value
+  QCOMPARE(settings.value(m_settingsGroup + QString("/Version")).toInt(), 1);
+  QCOMPARE(settings.value(m_settingsGroup + QString("/AutoControl")).toBool(), false);
+  QCOMPARE(settings.value(m_settingsGroup + QString("/StartTemperature")).toDouble(), 70.0);
+  QCOMPARE(settings.value(m_settingsGroup + QString("/StopTemperature")).toDouble(), 60.0);
+
+  // Set defaults
+  m_pC_CP->ResetSettings();
+  m_pC_CP->RefreshSettings();
+}
+
+void Controller_circulationpump_test::Initialize()
+{
+  QVERIFY2(false, "Test not implemented yet.");
+}
+
+void Controller_circulationpump_test::ProcessMeasurement()
+{
+  QVERIFY2(false, "Test not implemented yet.");
 }
 
 QTEST_MAIN(Controller_circulationpump_test)
