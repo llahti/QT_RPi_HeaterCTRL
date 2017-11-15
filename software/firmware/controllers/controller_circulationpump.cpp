@@ -3,7 +3,7 @@
 #include <QSettings>
 
 Controller_CirculationPump::Controller_CirculationPump(QObject *parent)
-  : ControllerPlugin(parent)
+  : Controller_Interface(parent)
 {
 
 }

@@ -288,7 +288,7 @@ void HALTest::publicslot_setCirculationPump()
   hal.setCirculationPump(false);
   // Check that we got one signal
   qApp->processEvents();
-  spy.wait(1000);
+  spy.wait(500);
   QVERIFY2(spy.count() == 1, "Didn't receive one signal");
 
   // Check for correct data value
@@ -303,7 +303,7 @@ void HALTest::publicslot_setCirculationPump()
   hal.setCirculationPump(true);
   // Check that we got one signal
   qApp->processEvents();
-  spy.wait(1000);
+  spy.wait(500);
   QVERIFY2(spy.count() == 1, "Didn't receive one signal");
 
   // Check for correct data value

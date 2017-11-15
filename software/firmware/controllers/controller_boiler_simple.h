@@ -10,7 +10,7 @@
  * @brief The ControllerONOFF class
  * Simple on/off controller
  */
-class ControllerONOFF : public ControllerPlugin
+class ControllerONOFF : public Controller_Interface
 {
   Q_OBJECT
 

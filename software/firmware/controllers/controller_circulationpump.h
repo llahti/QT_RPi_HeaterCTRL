@@ -8,7 +8,7 @@
 #include "measurement_package.h"
 #include "app_globals.h"
 
-class Controller_CirculationPump : public ControllerPlugin
+class Controller_CirculationPump : public Controller_Interface
 {
   Q_OBJECT
 public:

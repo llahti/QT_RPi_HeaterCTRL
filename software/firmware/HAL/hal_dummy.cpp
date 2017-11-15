@@ -1,10 +1,6 @@
 #include "hal_dummy.h"
 #include "hal_interface.h"
-//#include <iostream>
-
-//hal_dummy::hal_dummy()
-//{
-//}
+#include <QDebug>
 
 int hal_dummy::measureBoilerTemp(double& result)
 {

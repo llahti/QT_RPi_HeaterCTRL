@@ -2,5 +2,5 @@ TEMPLATE = subdirs
 
 SUBDIRS += \
     heaterdata_test \
-    heatercontroller \
-    HAL
+    HAL \
+    controller_circulationpump_test

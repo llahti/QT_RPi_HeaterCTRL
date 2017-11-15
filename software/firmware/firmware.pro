@@ -3,6 +3,6 @@ TEMPLATE = subdirs
 SUBDIRS += \
     heaterconfig \
     HAL \
-    heatercontroller \
+    controllers \
     gui \
     test
