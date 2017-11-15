@@ -64,6 +64,9 @@ void Controller_CirculationPump::ResetSettings()
 
   // Then call fix missing to add all missing keys and values
   FixSettings();
+
+  // Synchronize
+  settings.sync();
 }
 
 void Controller_CirculationPump::FixSettings()
@@ -98,4 +101,7 @@ void Controller_CirculationPump::FixSettings()
   }
 
   settings.endGroup();
+
+  // Synchronize
+  settings.sync();
 }
