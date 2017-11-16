@@ -111,11 +111,42 @@ void Controller_circulationpump_test::RefreshSettings()
 
 void Controller_circulationpump_test::Initialize()
 {
-  QVERIFY2(false, "Test not implemented yet.");
+  // 1. Test that missing settings are reset
+  QSettings settings(COMPANYNAME, APPNAME);
+  QStringList keys {"Version", "AutoControl", "StartTemperature", "StopTemperature"};
+  for (auto s: keys) {
+    m_pC_CP->ResetSettings();  // Reset to known state
+    // Remove one by one
+    settings.remove(m_settingsGroup + "/" + s);
+    m_pC_CP->Initialize();
+    QVERIFY(settings.contains(m_settingsGroup + "/" + s));
+  }
+
+  // 2. Check that existing settings are not affected
+  m_pC_CP->ResetSettings();  // Reset to known state
+  // Set Values to something else than default
+  settings.beginGroup(m_settingsGroup);
+  settings.setValue("Version", 1);
+  settings.setValue("AutoControl", false);  // default is true
+  settings.setValue("StartTemperature", 90.0);
+  settings.setValue("StopTemperature", 80.0);
+  settings.endGroup();
+  // Check that values are still same after initialize
+  m_pC_CP->Initialize();
+  QCOMPARE(settings.value(m_settingsGroup + QString("/Version")).toInt(), 1);
+  QCOMPARE(settings.value(m_settingsGroup + QString("/AutoControl")).toBool(), false);
+  QCOMPARE(settings.value(m_settingsGroup + QString("/StartTemperature")).toDouble(), 90.0);
+  QCOMPARE(settings.value(m_settingsGroup + QString("/StopTemperature")).toDouble(), 80.0);
+
+  // Finally reset to known state
+  m_pC_CP->ResetSettings();
 }
 
 void Controller_circulationpump_test::ProcessMeasurement()
 {
+  // TODO: Check that measurement below the stop limit will stop pump
+  // TODO: Check that measurement above start limit will start pump
+  // TODO: Check that measurement between start and stop limits will not affect pump state
   QVERIFY2(false, "Test not implemented yet.");
 }
 
