@@ -1,6 +1,7 @@
 #include <QString>
 #include <QtTest>
 #include <QCoreApplication>
+#include <QSignalSpy>
 
 #include "hal.h"
 #include "controller_interface.h"
@@ -144,10 +145,70 @@ void Controller_circulationpump_test::Initialize()
 
 void Controller_circulationpump_test::ProcessMeasurement()
 {
-  // TODO: Check that measurement below the stop limit will stop pump
-  // TODO: Check that measurement above start limit will start pump
-  // TODO: Check that measurement between start and stop limits will not affect pump state
-  QVERIFY2(false, "Test not implemented yet.");
+  double stop_temp = 80;
+  double start_temp = 85;
+  // First set known settings
+  QSettings settings(COMPANYNAME, APPNAME);
+  settings.beginGroup(m_settingsGroup);
+  settings.setValue("Version", 0);
+  settings.setValue("AutoControl", true);  // default is true
+  settings.setValue("StartTemperature", start_temp);
+  settings.setValue("StopTemperature", stop_temp);
+  settings.endGroup();
+  settings.sync();
+
+  // Setup test
+  bool newState;
+  m_pC_CP->Initialize();
+  QSignalSpy spy(m_pC_CP, SIGNAL(stateChanged(bool)));
+  QVariant arg;
+
+  // Create a meas pack
+  MeasurementPackage meas;
+  meas.sensor_location = MeasurementPackage::SensorLocation::Boiler;
+  meas.sensor_type_ = MeasurementPackage::SensorType::TEMP_PT100;
+
+
+  // Build measurement for case 1
+  meas.timestamp_ =  QDateTime::currentDateTime();
+  meas.raw_measurements_.clear();
+  meas.raw_measurements_.append(QVariant(double(stop_temp - 0.1)));
+
+  // 1. Check that measurement below the stop limit will stop pump
+  m_pC_CP->ProcessMeasurement(meas);
+  qApp->processEvents();
+  spy.wait();
+  arg = spy.takeFirst().at(0);
+  newState = arg.toBool();
+  QCOMPARE(newState, false);
+
+  // Build measurement for case 2
+  meas.timestamp_ =  QDateTime::currentDateTime();
+  meas.raw_measurements_.clear();
+  meas.raw_measurements_.append(QVariant(double(start_temp + 0.1)));
+
+  // 2. Check that measurement above start limit will start pump
+  m_pC_CP->ProcessMeasurement(meas);
+  qApp->processEvents();
+  spy.wait();
+  arg = spy.takeFirst().at(0);
+  newState = arg.toBool();
+  QCOMPARE(newState, true);
+
+  // Build measurement for case 3
+  meas.timestamp_ =  QDateTime::currentDateTime();
+  meas.raw_measurements_.clear();
+  meas.raw_measurements_.append(QVariant(double(start_temp + stop_temp)/2.0));
+
+  // 3. Check that measurement between start and stop limits will not affect pump state
+  m_pC_CP->ProcessMeasurement(meas);  // center of limits
+  qApp->processEvents();
+  spy.wait();
+  arg = spy.takeFirst().at(0);
+  newState = arg.toBool();
+  QCOMPARE(newState, true);  // Should be true if last state have been true
+
+  //QVERIFY2(false, "Test not implemented yet.");
 }
 
 QTEST_MAIN(Controller_circulationpump_test)
